@@ -11,28 +11,31 @@ interface Props {
 }
 
 export interface EventInterface {
-  eventTitle: string;
-  eventOrganizer: string;
-  datesOfEvent: string;
-  imgUrl: string;
-  eventLocation: string;
-  eventExcerpt: string;
-  publishedDate: string;
+  title: string;
+  featured_image: string;
+  organizer_name: string;
+  event_excerpt: string;
+  published_date: string;
+  start: string;
+  end: string;
+  location_address: string;
   //   id: string;
 }
 
 interface EventsContextInterface {
   events: Array<EventInterface>;
   fetchEventData: () => Promise<any> | void;
-  setEventData: (eventDataJson:any) => void | void;
-  getEvents: () => void | void;
+  parseEventDataJson: (eventDataJson: any) => void | void;
+  getEvents: () => any | void;
+  setEvents: (events:Array<EventInterface>) => void | void;
 }
 
 const EventsContext = createContext<EventsContextInterface>({
   events: [],
   fetchEventData: () => undefined,
-  setEventData: () => undefined,
+  setEvents: () => undefined,
   getEvents: () => undefined,
+  parseEventDataJson: () => undefined,
 });
 
 const EventsProvider = ({ children }: Props): JSX.Element => {
@@ -44,11 +47,24 @@ const EventsProvider = ({ children }: Props): JSX.Element => {
     return response.json();
   };
 
-  const setEventData = (eventDataJson:any) => {
-    //set the event and push it the array.
+  // const setNewEvents = (events: Array<EventInterface>) => {
+  //set the event and push it the array.
+  // setEvents(events);
+  // };
+  const parseEventDataJson = (eventDataJson: any) => {
+    const parsedEvent: EventInterface = {
+      title: eventDataJson["title"],
+      featured_image: eventDataJson["featured_image"],
+      organizer_name: eventDataJson["organizer_name"],
+      event_excerpt: eventDataJson["event_excerpt"],
+      published_date: eventDataJson["published_date"],
+      start: eventDataJson["start"],
+      end: eventDataJson["end"],
+      location_address: eventDataJson["location_address"],
+    };
+    return parsedEvent;
   };
-
-  const getEvents = () => {
+  const getEvents:any = () => {
     return events;
   };
 
@@ -57,7 +73,8 @@ const EventsProvider = ({ children }: Props): JSX.Element => {
       value={{
         events: events,
         fetchEventData: fetchEventData,
-        setEventData: setEventData,
+        setEvents: setEvents,
+        parseEventDataJson:parseEventDataJson,
         getEvents: getEvents,
       }}
     >

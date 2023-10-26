@@ -5,81 +5,110 @@ import {
   View,
   Button,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { useEvents } from "../../context/eventsContext";
+import { EventInterface, useEvents } from "../../context/eventsContext";
 import { useEffect, useState } from "react";
 
-export default function Home({navigation}:{navigation:any}) {
-  
+export default function Home({ navigation }: { navigation: any }) {
   const events = useEvents();
   const [isLoading, setLoading] = useState(true);
-  
-  const setEventData = async ()=>{
+
+  const setEventData = async () => {
     const eventData = await events.fetchEventData();
-    // console.log(eventData);
+    const parsedEvents: Array<EventInterface> = [];
     console.log("=======printing first 20 elements=======");
-    for(var i = 0; i < 20; i++){
-
-      console.log("++++++++++++++++++++++++++++++++++++++");
-      console.log("title: "+eventData[i]["title"]);
-      console.log("imgUrl: "+eventData[i]["featured_image"]);
-      console.log("organizer: "+eventData[i]["organizer_name"]);
-      console.log("event_excerpt: "+eventData[i]["event_excerpt"]);
-      console.log("published_date: "+eventData[i]["published_date"]);
-      console.log("startdate: "+eventData[i]["start"]);
-      console.log("end: "+eventData[i]["end"]);
-      console.log("location: "+eventData[i]["location_address"]);
-      console.log("++++++++++++++++++++++++++++++++++++++");
+    for (var i = 0; i < 20; i++) {
+      const newParsedEvent: any = events.parseEventDataJson(eventData[i]);
+      parsedEvents.push(newParsedEvent);
     }
-    console.log("========================================");
-
-
+    events.setEvents(parsedEvents);
     setLoading(false);
-  }
-  useEffect(()=>{
-    if(isLoading){
+  };
+
+  useEffect(() => {
+    if (isLoading) {
       setEventData();
     }
-  },[]);
-  
+  }, []);
+
   return (
     <View style={PagesStyles.home}>
-      <ScrollView>
-        <EventButton navigation={navigation} />
-        <EventButton navigation={navigation} />
-        <EventButton navigation={navigation} />
-        <EventButton navigation={navigation} />
-        <EventButton navigation={navigation} />
-        <EventButton navigation={navigation} />
-        <EventButton navigation={navigation} />
-      </ScrollView>
+      {isLoading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <FlatList
+          data={events.getEvents()}
+          renderItem={(item: any) => {
+            console.trace("----flatlist element: " + JSON.stringify(item));
+            // console.log(item["item"]["title"]);
+            // return <Text>data</Text>;
+            return (
+              <EventButton
+                navigation={navigation}
+                imgUrl={item["item"]["featured_image"]}
+                title={item["item"]["title"]}
+                organizer={item["item"]["organizer_name"]}
+                datePublished={item["item"]["published_date"]}
+                startDate={item["item"]["start"]}
+                endDate={item["item"]["end"]}
+                id={0}
+              />
+            );
+          }}
+        />
+      )}
     </View>
   );
 }
 
-function EventButton({navigation}:{navigation:any}) {
+function EventButton({
+  navigation = "",
+  imgUrl = "",
+  title = "",
+  organizer = "",
+  datePublished = "",
+  startDate = "",
+  endDate = "",
+  id = -1,
+}: {
+  navigation: any;
+  imgUrl: string;
+  title: string;
+  organizer: string;
+  datePublished: string;
+  startDate: string;
+  endDate: string;
+  id: number;
+}) {
   return (
-    <TouchableOpacity onPress={()=>{
-      console.log("redirecting to event\n");
-      navigation.push("event");
-      }}>
+    <TouchableOpacity
+      onPress={() => {
+        console.log("redirecting to event\n");
+        navigation.push("event");
+      }}
+    >
       <View style={EventButtonStyle.mainBody}>
         <View style={EventButtonStyle.eventImage}>
-          <Text>Image</Text>
+          <Text>{imgUrl === "" ? "Image" : imgUrl}</Text>
         </View>
         {/* quick view of event details. */}
         <View style={EventButtonStyle.descriptionBody}>
-          <Text style={EventButtonStyle.title}>Event Title</Text>
+          <Text style={EventButtonStyle.title}>{title}</Text>
           <Text style={EventButtonStyle.eventDates}>
-            Dates: Start Date - End Date
+            Dates:{" "}
+            {startDate === "" || endDate === ""
+              ? "Start Date - End Date"
+              : `${startDate} - ${endDate}`}
           </Text>
           <Text style={EventButtonStyle.organizers}>
-            Organizers: First Organizer - Person's Name
+            Organizers:{" "}
+            {organizer === "" ? "First Organizer - Person's Name" : organizer}
           </Text>
           {/* last part, in small letters bottom of the button */}
           <Text style={EventButtonStyle.publishedDate}>
-            published ## days ago.
+            published at {datePublished === "" ? "no date" : datePublished}.
           </Text>
         </View>
       </View>
@@ -89,7 +118,7 @@ function EventButton({navigation}:{navigation:any}) {
 
 const PagesStyles = StyleSheet.create({
   home: {
-    backgroundColor: "#ff23f2",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
@@ -109,12 +138,13 @@ const EventButtonStyle = StyleSheet.create({
     marginVertical: 5,
     shadowColor: "black",
     borderRadius: 8,
+    /**add a text padding. */
   },
   eventImage: {
     width: 330,
     borderRadius: 8,
     height: 150,
-    backgroundColor: "#42f5c2",
+    backgroundColor: "#e3e3e3",
   },
   descriptionBody: {
     flex: 0,
