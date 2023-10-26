@@ -1,51 +1,99 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import HorizontalLine from "../components/horizontalLine";
+import CustomButton from "../components/customButton";
+
+/**
+ * event page interface
+ */
+interface EventPageInterface {
+  imgUrl: string | null;
+  eventTitle: string | null;
+  eventDates: string | null;
+  organizer: string | null;
+  location: string | null;
+  excerpt: string | null;
+  publishedDate: string | null;
+}
+
+// {
+//   imgUrl = null,
+//   eventTitle = null,
+//   eventDates = null,
+//   organizer = null,
+//   location = null,
+//   excerpt = null,
+//   publishedDate = null,
+// }
 
 /**
  * Body page
  */
 export default function EventPage() {
   return (
-    <View style={PagesStyles.event}>
+    <View style={EventPageStyles.body}>
+      {/* event image and title */}
       <View>
-        {/* featured image the whole screen */}
         <View style={EventElementStyle.eventImage}>
-          {/* title */}
           <Text style={EventTextStyles.eventTitle}>Title Event</Text>
         </View>
       </View>
-      <View style={PagesStyles.body}>
-        <Text style={EventTextStyles.organizers}>Organized by:</Text>
-        <Text style={EventTextStyles.datesOfEvent}>Dates:</Text>
-        <Text style={EventTextStyles.locationOfEvent}>Location:</Text>
-        <Text style={EventTextStyles.publishedDate}>
-          published ### days ago
-        </Text>
+      {/* event body */}
+      <ScrollView>
+        <View style={EventPageStyles.eventDetails}>
+          <Text style={EventTextStyles.organizersHeader}>Organized by:</Text>
+          <Text style={EventTextStyles.organizersBody}>Organizer</Text>
+          <HorizontalLine />
+          <Text style={EventTextStyles.datesOfEventHeader}>
+            Dates:
+            <Text style={EventTextStyles.datesOfEventBody}> 12/23/2000</Text>
+          </Text>
 
-        <Text style={EventTextStyles.eventExcerpt}>event Excerpt</Text>
-        
-        {/* content can be transformed to jsx element. */}
-        {/* button to redirect the user to pcc website */}
+          <HorizontalLine />
+          <Text style={EventTextStyles.locationOfEventHeader}>Location:</Text>
+          <Text style={EventTextStyles.locationOfEventBody}>
+            1570 E. Colorado Blvd. Pasadena, CA 91106
+          </Text>
+          <HorizontalLine />
+          <Text style={EventTextStyles.eventExcerptHeader}>
+            About the event:
+          </Text>
+          <Text style={EventTextStyles.eventExcerptBody}>
+            voluptate reprehenderit voluptate cillum commodo proident in laboris
+            veniam irure veniam minim ut cupidatat consequat duis mollit commodo
+            incididunt id.
+          </Text>
+          <HorizontalLine />
 
-        {/* if external_link_button_text is "Tickets", set the button for
+          <CustomButton />
+          <Text style={EventTextStyles.publishedDateHeader}>
+            published ### days ago
+          </Text>
+
+          {/* content can be transformed to jsx element. */}
+          {/* button to redirect the user to pcc website */}
+
+          {/* if external_link_button_text is "Tickets", set the button for
     "Get Tickets "  */}
-      </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
 
-const PagesStyles = StyleSheet.create({
-  event: {
-    backgroundColor: "#ff23f2",
+const EventPageStyles = StyleSheet.create({
+  body: {
+    backgroundColor: "white",
     flex: 1,
     flexDirection: "column",
     paddingVertical: 10,
     paddingHorizontal: 5,
+    gap: 5,
   },
-  body: {
+  eventDetails: {
     flex: 1,
+    paddingVertical: 5,
     flexDirection: "column",
     alignItems: "flex-start",
-    backgroundColor: "green",
   },
 });
 
@@ -62,11 +110,22 @@ const EventTextStyles = StyleSheet.create({
     textShadowColor: "black",
     textShadowRadius: 0.5,
   },
-  organizers: {fontSize:22, fontWeight:"400"},
-  datesOfEvent: {fontSize:22, fontWeight:"400"},
-  locationOfEvent: {fontSize:22, fontWeight:"400"},
-  publishedDate: {fontSize:22, fontWeight:"400"},
-  eventExcerpt: {fontSize:22, fontWeight:"400"},
+
+  /**
+   * Text headers
+   */
+  organizersHeader: { fontSize: 22, fontWeight: "500" },
+  datesOfEventHeader: { fontSize: 22, fontWeight: "500" },
+  locationOfEventHeader: { fontSize: 22, fontWeight: "500" },
+  publishedDateHeader: { fontSize: 22, fontWeight: "500" },
+  eventExcerptHeader: { fontSize: 22, fontWeight: "500" },
+  /**
+   * Text bodies
+   */
+  eventExcerptBody: { fontSize: 22, fontWeight: "400" },
+  organizersBody: { fontSize: 22 },
+  datesOfEventBody: { fontWeight: "400" },
+  locationOfEventBody: { fontSize: 22 },
 });
 
 /**

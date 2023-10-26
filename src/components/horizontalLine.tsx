@@ -8,8 +8,7 @@ export default function HorizontalLine(){
     style={{
         borderBottomColor:"black",
         borderBottomWidth: 1,
-        marginHorizontal:5,
-        marginVertical:10,
+        marginVertical:7,
         alignSelf:"stretch",
     }}></View>
 }

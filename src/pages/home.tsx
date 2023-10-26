@@ -7,7 +7,42 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { useEvents } from "../../context/eventsContext";
+import { useEffect, useState } from "react";
+
 export default function Home({navigation}:{navigation:any}) {
+  
+  const events = useEvents();
+  const [isLoading, setLoading] = useState(true);
+  
+  const setEventData = async ()=>{
+    const eventData = await events.fetchEventData();
+    // console.log(eventData);
+    console.log("=======printing first 20 elements=======");
+    for(var i = 0; i < 20; i++){
+
+      console.log("++++++++++++++++++++++++++++++++++++++");
+      console.log("title: "+eventData[i]["title"]);
+      console.log("imgUrl: "+eventData[i]["featured_image"]);
+      console.log("organizer: "+eventData[i]["organizer_name"]);
+      console.log("event_excerpt: "+eventData[i]["event_excerpt"]);
+      console.log("published_date: "+eventData[i]["published_date"]);
+      console.log("startdate: "+eventData[i]["start"]);
+      console.log("end: "+eventData[i]["end"]);
+      console.log("location: "+eventData[i]["location_address"]);
+      console.log("++++++++++++++++++++++++++++++++++++++");
+    }
+    console.log("========================================");
+
+
+    setLoading(false);
+  }
+  useEffect(()=>{
+    if(isLoading){
+      setEventData();
+    }
+  },[]);
+  
   return (
     <View style={PagesStyles.home}>
       <ScrollView>
