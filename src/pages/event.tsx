@@ -1,6 +1,8 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import HorizontalLine from "../components/horizontalLine";
 import CustomButton from "../components/customButton";
+import { useEvents } from "../../context/eventsContext";
+import { useEffect } from "react";
 
 /**
  * event page interface
@@ -28,7 +30,11 @@ interface EventPageInterface {
 /**
  * Body page
  */
-export default function EventPage() {
+export default function EventPage(id: any) {
+  const events = useEvents();
+  let eventData = events.getEvents()[id];
+  console.log("event page loaded:");
+  console.log(eventData);
   return (
     <View style={EventPageStyles.body}>
       {/* event image and title */}

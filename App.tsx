@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 /** import pages */
 import Home from "./src/pages/home";
 import EventPage from "./src/pages/event";
-import {EventsContext, EventsProvider} from "./context/eventsContext"
+import { EventsProvider} from "./context/eventsContext"
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -17,7 +17,8 @@ export default function App() {
 
       <Stack.Navigator initialRouteName="home">
         <Stack.Screen name="home" component={Home} />
-        <Stack.Screen name="event" component={EventPage} />
+        <Stack.Screen name="event" component={EventPage}
+         />
       </Stack.Navigator>
     </NavigationContainer>
     </EventsProvider>

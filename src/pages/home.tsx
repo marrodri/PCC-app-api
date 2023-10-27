@@ -6,6 +6,7 @@ import {
   Button,
   TouchableOpacity,
   FlatList,
+  Image,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { EventInterface, useEvents } from "../../context/eventsContext";
@@ -20,7 +21,7 @@ export default function Home({ navigation }: { navigation: any }) {
     const parsedEvents: Array<EventInterface> = [];
     console.log("=======printing first 20 elements=======");
     for (var i = 0; i < 20; i++) {
-      const newParsedEvent: any = events.parseEventDataJson(eventData[i]);
+      const newParsedEvent: any = events.parseEventDataJson(eventData[i], i);
       parsedEvents.push(newParsedEvent);
     }
     events.setEvents(parsedEvents);
@@ -42,8 +43,6 @@ export default function Home({ navigation }: { navigation: any }) {
           data={events.getEvents()}
           renderItem={(item: any) => {
             console.trace("----flatlist element: " + JSON.stringify(item));
-            // console.log(item["item"]["title"]);
-            // return <Text>data</Text>;
             return (
               <EventButton
                 navigation={navigation}
@@ -53,7 +52,7 @@ export default function Home({ navigation }: { navigation: any }) {
                 datePublished={item["item"]["published_date"]}
                 startDate={item["item"]["start"]}
                 endDate={item["item"]["end"]}
-                id={0}
+                id={item["item"]["id"]}
               />
             );
           }}
@@ -85,13 +84,16 @@ function EventButton({
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log("redirecting to event\n");
-        navigation.push("event");
+        console.log("redirecting to event id:" + id + "\n");
+
+        //TODO: add a parameter to pass the id, that which
+        //points to the current index.
+        navigation.navigate("event", { id });
       }}
     >
       <View style={EventButtonStyle.mainBody}>
         <View style={EventButtonStyle.eventImage}>
-          <Text>{imgUrl === "" ? "Image" : imgUrl}</Text>
+          <Image style={ImageStyles.eventButtonImg} source={{uri:`${imgUrl}`}} />
         </View>
         {/* quick view of event details. */}
         <View style={EventButtonStyle.descriptionBody}>
@@ -115,6 +117,15 @@ function EventButton({
     </TouchableOpacity>
   );
 }
+
+const ImageStyles = StyleSheet.create({
+  eventButtonImg:{
+    width:330,
+    height:150,
+    objectFit:"cover",
+    borderRadius: 8,
+  }
+})
 
 const PagesStyles = StyleSheet.create({
   home: {

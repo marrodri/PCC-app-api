@@ -19,13 +19,14 @@ export interface EventInterface {
   start: string;
   end: string;
   location_address: string;
+  id:number;
   //   id: string;
 }
 
 interface EventsContextInterface {
   events: Array<EventInterface>;
   fetchEventData: () => Promise<any> | void;
-  parseEventDataJson: (eventDataJson: any) => void | void;
+  parseEventDataJson: (eventDataJson: any, index:number) => void | void;
   getEvents: () => any | void;
   setEvents: (events:Array<EventInterface>) => void | void;
 }
@@ -51,7 +52,7 @@ const EventsProvider = ({ children }: Props): JSX.Element => {
   //set the event and push it the array.
   // setEvents(events);
   // };
-  const parseEventDataJson = (eventDataJson: any) => {
+  const parseEventDataJson = (eventDataJson: any, index:number) => {
     const parsedEvent: EventInterface = {
       title: eventDataJson["title"],
       featured_image: eventDataJson["featured_image"],
@@ -61,6 +62,7 @@ const EventsProvider = ({ children }: Props): JSX.Element => {
       start: eventDataJson["start"],
       end: eventDataJson["end"],
       location_address: eventDataJson["location_address"],
+      id:index,
     };
     return parsedEvent;
   };
