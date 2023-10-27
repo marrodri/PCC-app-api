@@ -11,6 +11,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { EventInterface, useEvents } from "../../context/eventsContext";
 import { useEffect, useState } from "react";
+import HorizontalLine from "../components/horizontalLine";
 
 export default function Home({ navigation }: { navigation: any }) {
   const events = useEvents();
@@ -91,25 +92,38 @@ function EventButton({
         navigation.navigate("event", { id });
       }}
     >
-      <View style={EventButtonStyle.mainBody}>
+      <View
+        style={[
+          EventButtonStyle.mainBody,
+          id % 2 === 0
+            ? EventButtonStyle.yellowBackground
+            : EventButtonStyle.redBackground,
+        ]}
+      >
         <View style={EventButtonStyle.eventImage}>
-          <Image style={ImageStyles.eventButtonImg} source={{uri:`${imgUrl}`}} />
+          <Image
+            style={ImageStyles.eventButtonImg}
+            source={{ uri: `${imgUrl}` }}
+          />
         </View>
         {/* quick view of event details. */}
         <View style={EventButtonStyle.descriptionBody}>
           <Text style={EventButtonStyle.title}>{title}</Text>
+          <HorizontalLine />
           <Text style={EventButtonStyle.eventDates}>
             Dates:{" "}
             {startDate === "" || endDate === ""
               ? "Start Date - End Date"
               : `${startDate} - ${endDate}`}
           </Text>
+          <HorizontalLine />
           <Text style={EventButtonStyle.organizers}>
             Organizers:{" "}
             {organizer === "" ? "First Organizer - Person's Name" : organizer}
           </Text>
+          <HorizontalLine />
           {/* last part, in small letters bottom of the button */}
-          <Text style={EventButtonStyle.publishedDate}>
+          <Text>
             published at {datePublished === "" ? "no date" : datePublished}.
           </Text>
         </View>
@@ -119,13 +133,13 @@ function EventButton({
 }
 
 const ImageStyles = StyleSheet.create({
-  eventButtonImg:{
-    width:330,
-    height:150,
-    objectFit:"cover",
+  eventButtonImg: {
+    width: 330,
+    height: 150,
+    objectFit: "cover",
     borderRadius: 8,
-  }
-})
+  },
+});
 
 const PagesStyles = StyleSheet.create({
   home: {
@@ -139,7 +153,6 @@ const PagesStyles = StyleSheet.create({
 
 const EventButtonStyle = StyleSheet.create({
   mainBody: {
-    backgroundColor: "#4287f5",
     padding: 7,
     justifyContent: "center",
     alignItems: "center",
@@ -147,10 +160,15 @@ const EventButtonStyle = StyleSheet.create({
     flexDirection: "column",
     gap: 5,
     marginVertical: 5,
-    shadowColor: "black",
     borderRadius: 8,
-    /**add a text padding. */
+    /**add drop shadow. */
+    shadowOffset: { width: 0.5, height: 1 },
+    shadowColor: "black",
+    shadowRadius: 1,
+    shadowOpacity: 1,
   },
+  redBackground: { backgroundColor: "#f2655c" },
+  yellowBackground: { backgroundColor: "#faf8b9" },
   eventImage: {
     width: 330,
     borderRadius: 8,
@@ -169,9 +187,7 @@ const EventButtonStyle = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    backgroundColor: "#cbf542",
   },
-  eventDates: { backgroundColor: "#cbf542", fontSize: 20, fontWeight: "600" },
-  organizers: { fontSize: 18, fontWeight: "400", backgroundColor: "#cbf542" },
-  publishedDate: { backgroundColor: "#cbf542" },
+  eventDates: { fontSize: 20, fontWeight: "600" },
+  organizers: { fontSize: 18, fontWeight: "400" },
 });
