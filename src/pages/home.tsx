@@ -86,7 +86,6 @@ function EventButton({
     <TouchableOpacity
       onPress={() => {
         console.log("redirecting to event id:" + id + "\n");
-
         //TODO: add a parameter to pass the id, that which
         //points to the current index.
         navigation.navigate("event", { id });
@@ -179,7 +178,6 @@ const EventButtonStyle = StyleSheet.create({
     flex: 0,
     width: 330,
     gap: 2,
-
     flexDirection: "column",
     alignItems: "flex-start",
     alignContent: "flex-start",

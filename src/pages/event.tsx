@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View,Image } from "react-native";
 import HorizontalLine from "../components/horizontalLine";
 import CustomButton from "../components/customButton";
 import { useEvents } from "../../context/eventsContext";
@@ -32,7 +32,8 @@ interface EventPageInterface {
  */
 export default function EventPage(id: any) {
   const events = useEvents();
-  let eventData = events.getEvents()[id];
+  const index = id["route"]["params"]["id"];
+  let eventData = events.getEvents()[index];
   console.log("event page loaded:");
   console.log(eventData);
   return (
@@ -40,18 +41,22 @@ export default function EventPage(id: any) {
       {/* event image and title */}
       <View>
         <View style={EventElementStyle.eventImage}>
-          <Text style={EventTextStyles.eventTitle}>Title Event</Text>
+        <Image
+            style={ImageStyles.eventButtonImg}
+            source={{ uri: `${eventData["featured_image"]}` }}
+          />
+          <Text style={EventTextStyles.eventTitle}>{eventData["title"]}</Text>
         </View>
       </View>
       {/* event body */}
       <ScrollView>
         <View style={EventPageStyles.eventDetails}>
           <Text style={EventTextStyles.organizersHeader}>Organized by:</Text>
-          <Text style={EventTextStyles.organizersBody}>Organizer</Text>
+          <Text style={EventTextStyles.organizersBody}>{" "+eventData["organizer_name"]}</Text>
           <HorizontalLine />
           <Text style={EventTextStyles.datesOfEventHeader}>
             Dates:
-            <Text style={EventTextStyles.datesOfEventBody}> 12/23/2000</Text>
+            <Text style={EventTextStyles.datesOfEventBody}> {eventData["start"]}-{eventData["end"]}</Text>
           </Text>
 
           <HorizontalLine />
@@ -64,15 +69,13 @@ export default function EventPage(id: any) {
             About the event:
           </Text>
           <Text style={EventTextStyles.eventExcerptBody}>
-            voluptate reprehenderit voluptate cillum commodo proident in laboris
-            veniam irure veniam minim ut cupidatat consequat duis mollit commodo
-            incididunt id.
+            {eventData["event_excerpt"]}
           </Text>
           <HorizontalLine />
 
           <CustomButton />
           <Text style={EventTextStyles.publishedDateHeader}>
-            published ### days ago
+            Date published: {eventData["published_date"]}
           </Text>
 
           {/* content can be transformed to jsx element. */}
@@ -110,11 +113,12 @@ const EventTextStyles = StyleSheet.create({
     marginHorizontal: 5,
     fontSize: 28,
     color: "white",
+    position:"absolute",
 
     /**text shadow settings */
-    textShadowOffset: { width: 0.5, height: 0.5 },
+    textShadowOffset: { width: 1.0, height: 1.0 },
     textShadowColor: "black",
-    textShadowRadius: 0.5,
+    textShadowRadius: 1.0,
   },
 
   /**
@@ -144,5 +148,14 @@ const EventElementStyle = StyleSheet.create({
     height: 225,
     backgroundColor: "#e3e3e3",
     justifyContent: "flex-end",
+  },
+});
+
+const ImageStyles = StyleSheet.create({
+  eventButtonImg: {
+    width: 365,
+    height: 225,
+    objectFit: "cover",
+    borderRadius: 10,
   },
 });
